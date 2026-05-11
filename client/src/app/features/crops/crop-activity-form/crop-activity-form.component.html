@@ -1,0 +1,53 @@
+<section class="card">
+  <h3>Log field activity</h3>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  <form [formGroup]="activityForm" (ngSubmit)="submitActivity()">
+    <label>
+      <span>Activity type</span>
+      <select formControlName="activityType">
+        <option value="fertilizer">Fertilizer</option>
+        <option value="pesticide">Pesticide</option>
+      </select>
+    </label>
+    <label><span>Date</span><input type="date" formControlName="date" /></label>
+    <label><span>Product</span><input type="text" formControlName="product" /></label>
+    <label><span>Quantity</span><input type="text" formControlName="quantity" /></label>
+    <label><span>Notes</span><input type="text" formControlName="notes" /></label>
+    <button type="submit" [disabled]="busy()">Save activity</button>
+  </form>
+</section>
+
+@if (isSeedMaize()) {
+  <section class="card">
+    <h3>Add detasseling task (seed maize)</h3>
+    <form [formGroup]="detasselingForm" (ngSubmit)="submitDetasseling()">
+      <label><span>Assigned worker</span><input type="text" formControlName="assignedWorker" /></label>
+      <label><span>Rows completed</span><input type="number" formControlName="rowsCompleted" /></label>
+      <label><span>Field</span><input type="text" formControlName="field" [placeholder]="crop.fieldName" /></label>
+      <label>
+        <span>Status</span>
+        <select formControlName="status">
+          <option value="pending">Pending</option>
+          <option value="in-progress">In progress</option>
+          <option value="done">Done</option>
+        </select>
+      </label>
+      <button type="submit" [disabled]="busy()">Add task</button>
+    </form>
+  </section>
+}
+
+@if (isTomatoes()) {
+  <section class="card">
+    <h3>Add tomato harvest cycle</h3>
+    <form [formGroup]="harvestForm" (ngSubmit)="submitHarvestCycle()">
+      <label><span>Cycle #</span><input type="number" formControlName="cycleNumber" /></label>
+      <label><span>Harvest date</span><input type="date" formControlName="harvestedOn" /></label>
+      <label><span>Quantity (kg)</span><input type="text" formControlName="quantityKg" /></label>
+      <label><span>Notes</span><input type="text" formControlName="notes" /></label>
+      <button type="submit" [disabled]="busy()">Add cycle</button>
+    </form>
+  </section>
+}

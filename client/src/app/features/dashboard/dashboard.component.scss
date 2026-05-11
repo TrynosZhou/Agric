@@ -1,0 +1,30 @@
+/* Dashboard now relies on Bootstrap for layout. Keep only tiny, safe tweaks. */
+.card {
+  border-radius: 1rem;
+}
+
+.list-group-item {
+  border-color: rgba(230, 234, 242, 0.9);
+}
+
+.hero {
+  background: linear-gradient(135deg, #1d4ed8, #2563eb 45%, #0ea5e9);
+}
+
+.quick-actions {
+  border: 1px solid rgba(37, 99, 235, 0.15);
+}
+
+.alert-item {
+  border-left: 4px solid transparent;
+}
+
+.alert-item:has(.text-bg-danger) {
+  border-left-color: #f04438;
+  background: #fffbfa;
+}
+
+.alert-item:has(.text-bg-warning) {
+  border-left-color: #f79009;
+  background: #fffaeb;
+}

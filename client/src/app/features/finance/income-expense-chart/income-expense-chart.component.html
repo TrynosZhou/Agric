@@ -1,0 +1,27 @@
+<section class="page">
+  <h1>Income vs Expense</h1>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  <section class="card">
+    <form [formGroup]="form" (ngSubmit)="fetch()">
+      <label><span>From</span><input type="date" formControlName="from" /></label>
+      <label><span>To</span><input type="date" formControlName="to" /></label>
+      <button type="submit">Update</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <div class="bars">
+      <div class="bar">
+        <div class="fill income" [style.height.%]="incomePct()"></div>
+        <div class="label">Income: {{ income() }}</div>
+      </div>
+      <div class="bar">
+        <div class="fill expense" [style.height.%]="expensePct()"></div>
+        <div class="label">Expense: {{ expense() }}</div>
+      </div>
+    </div>
+  </section>
+</section>
+

@@ -1,0 +1,78 @@
+<div class="container-fluid py-3">
+  <div class="d-flex flex-wrap align-items-start justify-content-between gap-3 mb-3">
+    <div>
+      <h1 class="h3 mb-1 fw-bold">Fields</h1>
+      <div class="text-secondary">Create fields so you can allocate crops, assets, and irrigation systems.</div>
+    </div>
+    <button type="button" class="btn btn-outline-primary" (click)="load()">Refresh</button>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  }
+
+  <div class="row g-3">
+    <div class="col-12 col-lg-5">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="h6 fw-bold mb-3">Add field</h2>
+          <form [formGroup]="form" (ngSubmit)="submit()" class="vstack gap-2">
+            <div>
+              <label class="form-label mb-1">Field name</label>
+              <input class="form-control" type="text" formControlName="name" placeholder="e.g. North Block" />
+            </div>
+            <div>
+              <label class="form-label mb-1">Size (hectares)</label>
+              <input class="form-control" type="text" formControlName="sizeHectares" placeholder="e.g. 12.5" />
+            </div>
+            <div>
+              <label class="form-label mb-1">Location (optional)</label>
+              <input class="form-control" type="text" formControlName="location" placeholder="e.g. Near dam" />
+            </div>
+            <button class="btn btn-primary" type="submit">Create field</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-7">
+      <div class="card shadow-sm">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center">
+          <div class="fw-bold">Field list</div>
+          <span class="badge text-bg-secondary">{{ fields().length }}</span>
+        </div>
+        <div class="card-body">
+          @if (loading()) {
+            <div class="placeholder-glow">
+              <span class="placeholder col-12"></span>
+              <span class="placeholder col-10"></span>
+              <span class="placeholder col-11"></span>
+            </div>
+          } @else if (!hasFields()) {
+            <div class="text-secondary">No fields created yet.</div>
+          } @else {
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Size (ha)</th>
+                  <th>Location</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (f of fields(); track f.id) {
+                  <tr>
+                    <td><strong>{{ f.name }}</strong></td>
+                    <td>{{ f.sizeHectares }}</td>
+                    <td>{{ f.location || "—" }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

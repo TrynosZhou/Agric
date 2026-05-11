@@ -1,0 +1,88 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Workers</h1>
+      <p class="page-subtitle">Manage permanent and casual workers and their pay setup.</p>
+    </div>
+    <button type="button" class="btn" (click)="load()">Refresh</button>
+  </div>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <section class="grid">
+    <section class="card">
+      <h2 class="section-title">Add worker</h2>
+      <form [formGroup]="form" (ngSubmit)="save()" class="form-grid">
+        <div class="field"><span>Name</span><input type="text" formControlName="name" placeholder="e.g. Tendai Moyo" /></div>
+        <div class="field">
+          <span>Type</span>
+          <select formControlName="type">
+            <option value="permanent">Permanent</option>
+            <option value="casual">Casual</option>
+          </select>
+        </div>
+        <div class="field"><span>Wage rate (casual)</span><input type="text" formControlName="wageRate" placeholder="e.g. 15" /></div>
+        <div class="field"><span>Monthly salary (permanent)</span><input type="text" formControlName="monthlySalary" placeholder="e.g. 500" /></div>
+        <div class="field">
+          <span>Casual pay mode</span>
+          <select formControlName="casualPayMode">
+            <option value="day">Per day</option>
+            <option value="task">Per task</option>
+          </select>
+        </div>
+        <div class="field"><span>Assigned tasks</span><input type="text" formControlName="assignedTasks" placeholder="comma separated" /></div>
+        <button type="submit" class="btn btn-primary">Create worker</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <div class="table-head">
+        <div>
+          <h2 class="section-title">Worker directory</h2>
+          <p class="page-subtitle">Search by name or type.</p>
+        </div>
+        <div class="field search">
+          <span>Search</span>
+          <input type="text" [value]="query()" (input)="query.set($any($event.target).value)" placeholder="e.g. casual, permanent, name..." />
+        </div>
+      </div>
+
+      @if (loading()) {
+        <div class="skeleton sk-block"></div>
+        <div class="skeleton sk-block"></div>
+      } @else if (!hasWorkers()) {
+        <p class="page-subtitle">No workers found.</p>
+      } @else {
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Rate / Salary</th>
+              <th>Pay mode</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (worker of filteredWorkers(); track worker.id) {
+              <tr>
+                <td><strong>{{ worker.name }}</strong></td>
+                <td>
+                  <span class="badge" [class.success]="worker.type === 'permanent'">{{ worker.type }}</span>
+                </td>
+                <td>
+                  @if (worker.type === "permanent") {
+                    {{ worker.monthlySalary || 0 }}
+                  } @else {
+                    {{ worker.wageRate || 0 }}
+                  }
+                </td>
+                <td>{{ worker.type === "casual" ? worker.casualPayMode : "monthly" }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </section>
+  </section>
+</section>

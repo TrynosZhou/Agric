@@ -1,0 +1,38 @@
+.page {
+  display: grid;
+  gap: 1rem;
+}
+.card {
+  border: 1px solid #d8dee8;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  background: #fff;
+}
+.error {
+  color: #b42318;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.table th,
+.table td {
+  border-bottom: 1px solid #e6eaf2;
+  padding: 0.5rem;
+  text-align: left;
+}
+.actions {
+  display: flex;
+  gap: 0.4rem;
+}
+.badge {
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid #d0d5dd;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+.badge.paid {
+  border-color: #12b76a;
+  color: #067647;
+}

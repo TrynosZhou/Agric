@@ -1,0 +1,72 @@
+<section class="page">
+  <a routerLink="/crops">Back to crops</a>
+  @if (loading()) {
+    <p>Loading crop record...</p>
+  } @else if (error()) {
+    <p class="error">{{ error() }}</p>
+  } @else if (crop(); as item) {
+    <article class="card">
+      <h1>{{ item.cropType === "custom" ? item.customCropType : item.cropType }}</h1>
+      <p><strong>Field:</strong> {{ item.fieldName }}</p>
+      <p><strong>Planting date:</strong> {{ item.plantingDate }}</p>
+      <p><strong>Growth stage:</strong> {{ item.growthStage }}</p>
+      <p><strong>Irrigation schedule:</strong> {{ item.irrigationSchedule || "Not set" }}</p>
+      <p><strong>Estimated yield:</strong> {{ item.estimatedYield || "Not set" }}</p>
+    </article>
+
+    <article class="card">
+      <h2>Fertilizer applications</h2>
+      @if (item.fertilizerApplications.length === 0) {
+        <p>No records yet.</p>
+      } @else {
+        <ul>
+          @for (record of item.fertilizerApplications; track $index) {
+            <li>{{ record.date }} - {{ record.product }} ({{ record.quantity }})</li>
+          }
+        </ul>
+      }
+      <h2>Pesticide applications</h2>
+      @if (item.pesticideApplications.length === 0) {
+        <p>No records yet.</p>
+      } @else {
+        <ul>
+          @for (record of item.pesticideApplications; track $index) {
+            <li>{{ record.date }} - {{ record.product }} ({{ record.quantity }})</li>
+          }
+        </ul>
+      }
+    </article>
+
+    @if (item.cropType === "seed maize") {
+      <article class="card">
+        <h2>Detasseling tasks</h2>
+        @if (item.detasselingTasks.length === 0) {
+          <p>No detasseling tasks yet.</p>
+        } @else {
+          <ul>
+            @for (task of item.detasselingTasks; track task.id) {
+              <li>{{ task.assignedWorker }} - {{ task.rowsCompleted }} rows - {{ task.status }}</li>
+            }
+          </ul>
+        }
+      </article>
+    }
+
+    @if (item.cropType === "tomatoes") {
+      <article class="card">
+        <h2>Harvest cycles</h2>
+        @if (item.harvestCycles.length === 0) {
+          <p>No harvest cycles yet.</p>
+        } @else {
+          <ul>
+            @for (cycle of item.harvestCycles; track cycle.id) {
+              <li>Cycle {{ cycle.cycleNumber }} - {{ cycle.harvestedOn }} - {{ cycle.quantityKg }} kg</li>
+            }
+          </ul>
+        }
+      </article>
+    }
+
+    <app-crop-activity-form [crop]="item" [onSaved]="reload.bind(this)" />
+  }
+</section>

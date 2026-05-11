@@ -1,0 +1,34 @@
+<section class="page">
+  <h1>Asset usage log</h1>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  <section class="card">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <label>
+        <span>Asset</span>
+        <select formControlName="assetId">
+          <option value="" disabled>Select asset</option>
+          @for (asset of assets(); track asset.id) {
+            <option [value]="asset.id">{{ asset.name }}</option>
+          }
+        </select>
+      </label>
+      <label><span>Quantity in use</span><input type="number" formControlName="quantityInUse" /></label>
+      <label><span>Assigned user</span><input type="text" formControlName="currentAssignedUser" /></label>
+      <button type="submit">Save usage log</button>
+    </form>
+  </section>
+  <section class="card">
+    <h2>Current asset usage</h2>
+    @if (!hasAssets()) {
+      <p>No assets available.</p>
+    } @else {
+      <ul>
+        @for (asset of assets(); track asset.id) {
+          <li>{{ asset.name }}: {{ asset.quantityInUse }}/{{ asset.quantityAvailable }} ({{ asset.currentAssignedUser || "Unassigned" }})</li>
+        }
+      </ul>
+    }
+  </section>
+</section>

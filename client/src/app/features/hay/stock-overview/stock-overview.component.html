@@ -1,0 +1,21 @@
+<section class="page">
+  <h1>Hay stock overview</h1>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  @if (stock(); as s) {
+    @if (s.lowStock) {
+      <div class="alert">Low stock alert: {{ s.balesInStock }} bales left (threshold {{ s.lowStockThreshold }})</div>
+    }
+  }
+  <section class="card">
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <label><span>Total bales produced</span><input type="number" formControlName="totalBalesProduced" /></label>
+      <label><span>Bales in stock</span><input type="number" formControlName="balesInStock" /></label>
+      <label><span>Bales sold</span><input type="number" formControlName="balesSold" /></label>
+      <label><span>Price per bale</span><input type="text" formControlName="pricePerBale" /></label>
+      <label><span>Low-stock threshold</span><input type="number" formControlName="lowStockThreshold" /></label>
+      <button type="submit">Save</button>
+    </form>
+  </section>
+</section>

@@ -1,0 +1,47 @@
+<section class="page">
+  <h1>Payroll summary</h1>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  <section class="card">
+    <form [formGroup]="form" (ngSubmit)="fetch()">
+      <label><span>Month (YYYY-MM)</span><input type="text" formControlName="month" placeholder="2026-04" /></label>
+      <button type="submit">Load summary</button>
+    </form>
+  </section>
+
+  @if (loading()) {
+    <p>Loading payroll summary...</p>
+  } @else if (summary(); as data) {
+    <section class="card">
+      <h2>Totals</h2>
+      <p>Permanent salary total: {{ data.totals.permanentMonthly }}</p>
+      <p>Casual total: {{ data.totals.casual }}</p>
+      <p><strong>Total labour cost: {{ data.totals.totalLabourCost }}</strong></p>
+    </section>
+    <section class="card">
+      <h2>Cost per crop group</h2>
+      @if (data.cropBreakdown.length === 0) {
+        <p>No crop allocations for this month.</p>
+      } @else {
+        <ul>
+          @for (item of data.cropBreakdown; track item.group) {
+            <li>{{ item.group }} - {{ item.cost }}</li>
+          }
+        </ul>
+      }
+    </section>
+    <section class="card">
+      <h2>Cost per livestock group</h2>
+      @if (data.livestockBreakdown.length === 0) {
+        <p>No livestock allocations for this month.</p>
+      } @else {
+        <ul>
+          @for (item of data.livestockBreakdown; track item.group) {
+            <li>{{ item.group }} - {{ item.cost }}</li>
+          }
+        </ul>
+      }
+    </section>
+  }
+</section>

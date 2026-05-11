@@ -1,0 +1,30 @@
+<section class="card">
+  <h3>Health events log</h3>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <label>
+      <span>Event type</span>
+      <select formControlName="eventType">
+        <option value="weight">Weight</option>
+        <option value="vaccination">Vaccination</option>
+        <option value="dipping">Dipping</option>
+        <option value="treatment">Treatment</option>
+        <option value="milk-production">Milk production (cattle only)</option>
+        <option value="mortality">Mortality</option>
+      </select>
+    </label>
+
+    <label><span>Date</span><input type="date" formControlName="date" /></label>
+    <label><span>Weight (kg)</span><input type="text" formControlName="weightKg" /></label>
+    <label><span>Vaccine type</span><input type="text" formControlName="vaccineType" /></label>
+    <label><span>Next due date</span><input type="date" formControlName="nextDueDate" /></label>
+    <label><span>Dipping product</span><input type="text" formControlName="product" /></label>
+    <label><span>Treatment</span><input type="text" formControlName="treatment" /></label>
+    <label><span>Diagnosis</span><input type="text" formControlName="diagnosis" /></label>
+    <label><span>Milk liters</span><input type="text" formControlName="liters" /></label>
+    <label><span>Notes</span><input type="text" formControlName="notes" /></label>
+    <button type="submit" [disabled]="busy()">Save event</button>
+  </form>
+</section>

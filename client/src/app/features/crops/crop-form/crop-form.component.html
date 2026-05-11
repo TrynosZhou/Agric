@@ -1,0 +1,120 @@
+<div class="container-fluid py-3">
+  <div class="d-flex flex-wrap align-items-start justify-content-between gap-3 mb-3">
+    <div>
+      <h1 class="h3 mb-1 fw-bold">New crop</h1>
+      <div class="text-secondary">Create a crop record and link it to a field.</div>
+    </div>
+    <div class="d-flex gap-2">
+      <a routerLink="/crops" class="btn btn-outline-secondary">Back</a>
+      <button type="button" class="btn btn-outline-primary" (click)="loadFields()">Reload fields</button>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  }
+
+  <div class="row g-3">
+    <div class="col-12 col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <form [formGroup]="form" (ngSubmit)="submit()" class="row g-3">
+            <div class="col-12 col-md-6">
+              <label class="form-label mb-1">Crop type</label>
+              <select class="form-select" formControlName="cropType">
+                <option value="barley">Barley</option>
+                <option value="seed maize">Seed maize</option>
+                <option value="tomatoes">Tomatoes</option>
+                <option value="custom">Custom</option>
+              </select>
+            </div>
+
+            @if (isCustom()) {
+              <div class="col-12 col-md-6">
+                <label class="form-label mb-1">Custom crop name</label>
+                <input class="form-control" type="text" formControlName="customCropType" placeholder="e.g. Wheat" />
+                @if (form.controls.customCropType.touched && !form.controls.customCropType.value.trim()) {
+                  <div class="form-text text-danger">Custom crop type is required.</div>
+                }
+              </div>
+            }
+
+            <div class="col-12 col-md-6">
+              <div class="d-flex align-items-center justify-content-between">
+                <label class="form-label mb-1">Field</label>
+                <a routerLink="/fields" class="small text-decoration-none">+ Create field</a>
+              </div>
+              <select class="form-select" formControlName="fieldId" [disabled]="fieldsLoading()">
+                <option value="" disabled>Select a field</option>
+                @for (field of fields(); track field.id) {
+                  <option [value]="field.id">{{ field.name }}</option>
+                }
+              </select>
+              @if (fieldsLoading()) {
+                <div class="form-text">Loading fields…</div>
+              } @else if (fields().length === 0) {
+                <div class="form-text text-warning">
+                  No fields found. An <strong>admin</strong> must create a field first.
+                  <a routerLink="/fields" class="ms-1">Create field</a>
+                </div>
+              }
+              @if (form.controls.fieldId.touched && form.controls.fieldId.invalid) {
+                <div class="form-text text-danger">Please select a field.</div>
+              }
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label mb-1">Planting date</label>
+              <input class="form-control" type="date" formControlName="plantingDate" />
+              @if (form.controls.plantingDate.touched && form.controls.plantingDate.invalid) {
+                <div class="form-text text-danger">Planting date is required.</div>
+              }
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label mb-1">Growth stage</label>
+              <input class="form-control" type="text" formControlName="growthStage" placeholder="e.g. planned, vegetative, flowering" />
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label mb-1">Irrigation schedule</label>
+              <input class="form-control" type="text" formControlName="irrigationSchedule" placeholder="e.g. Every 3 days or 2026-05-01" />
+              <div class="form-text">Tip: include a date like <code>YYYY-MM-DD</code> for overdue reminders.</div>
+            </div>
+
+            <div class="col-12 col-md-6">
+              <label class="form-label mb-1">Estimated yield</label>
+              <div class="input-group">
+                <input class="form-control" type="text" formControlName="estimatedYield" placeholder="e.g. 1200" />
+                <span class="input-group-text">kg</span>
+              </div>
+            </div>
+
+            <div class="col-12 d-flex gap-2">
+              <button type="submit" class="btn btn-primary" [disabled]="busy() || fieldsLoading()">
+                @if (busy()) {
+                  <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                }
+                Create crop record
+              </button>
+              <a routerLink="/crops" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="h6 fw-bold mb-2">Quick tips</h2>
+          <ul class="small text-secondary mb-0">
+            <li>Use <strong>custom</strong> for uncommon crop types.</li>
+            <li>Growth stage is flexible—use what matches your process.</li>
+            <li>Irrigation schedule supports free text, but dates help alerts.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

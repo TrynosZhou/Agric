@@ -1,0 +1,33 @@
+<header class="top-bar">
+  <a routerLink="/dashboard" class="brand">Farm management</a>
+  <nav class="nav">
+    <a routerLink="/dashboard">Dashboard</a>
+    <a routerLink="/crops">Crops</a>
+    @if (auth.hasRole("admin")) {
+      <a routerLink="/fields">Fields</a>
+    }
+    <a routerLink="/livestock">Livestock</a>
+    <a routerLink="/labour/workers">Labour</a>
+    <a routerLink="/operations/assets">Operations</a>
+    <a routerLink="/hay/stock">Hay</a>
+    <a routerLink="/finance/summary">Finance</a>
+    @if (auth.hasRole("admin")) {
+      <a routerLink="/admin">Admin</a>
+    }
+    @if (auth.hasRole("admin", "manager")) {
+      <a routerLink="/manager">Manager</a>
+    }
+    @if (auth.hasRole("worker")) {
+      <a routerLink="/worker">Worker</a>
+    }
+  </nav>
+  <div class="user">
+    <app-notification-bell />
+    <span class="email">{{ auth.user()?.email }}</span>
+    <span class="role">{{ auth.user()?.role }}</span>
+    <button type="button" (click)="auth.logout()">Sign out</button>
+  </div>
+</header>
+<main class="main">
+  <router-outlet />
+</main>

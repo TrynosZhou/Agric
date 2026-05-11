@@ -1,0 +1,51 @@
+<section class="page">
+  <h1>Attendance capture</h1>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <section class="card">
+    <h2>Capture attendance record</h2>
+    <form [formGroup]="form" (ngSubmit)="save()">
+      <label>
+        <span>Worker</span>
+        <select formControlName="workerId">
+          <option value="" disabled>Select worker</option>
+          @for (worker of workers(); track worker.id) {
+            <option [value]="worker.id">{{ worker.name }}</option>
+          }
+        </select>
+      </label>
+      <label><span>Date</span><input type="date" formControlName="date" /></label>
+      <label><span>Hours worked</span><input type="text" formControlName="hoursWorked" /></label>
+      <label><span>Task performed</span><input type="text" formControlName="taskPerformed" /></label>
+      <label>
+        <span>Allocation system</span>
+        <select formControlName="allocationSystem">
+          <option value="crop">Crop</option>
+          <option value="livestock">Livestock</option>
+        </select>
+      </label>
+      <label><span>Allocated group</span><input type="text" formControlName="allocationGroup" /></label>
+      <button type="submit">Save attendance</button>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>Recent records</h2>
+    @if (loading()) {
+      <p>Loading...</p>
+    } @else if (!hasRecords()) {
+      <p>No attendance records yet.</p>
+    } @else {
+      <ul>
+        @for (record of records(); track record.id) {
+          <li>
+            {{ record.attendanceDate }} - {{ record.worker.name }} - {{ record.hoursWorked }}h -
+            {{ record.taskPerformed }} ({{ record.allocationSystem }}: {{ record.allocationGroup }})
+          </li>
+        }
+      </ul>
+    }
+  </section>
+</section>

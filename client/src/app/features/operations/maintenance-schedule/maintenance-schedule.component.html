@@ -1,0 +1,34 @@
+<section class="page">
+  <h1>Maintenance schedule</h1>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  <section class="card">
+    <h2>Schedule irrigation maintenance</h2>
+    <form [formGroup]="form" (ngSubmit)="addSchedule()">
+      <label>
+        <span>Irrigation system</span>
+        <select formControlName="systemId">
+          <option value="" disabled>Select system</option>
+          @for (system of systems(); track system.id) {
+            <option [value]="system.id">{{ system.systemType }} - {{ system.powerSource }}</option>
+          }
+        </select>
+      </label>
+      <label><span>Scheduled date</span><input type="date" formControlName="scheduledDate" /></label>
+      <button type="submit">Add maintenance date</button>
+    </form>
+  </section>
+  <section class="card">
+    <h2>Upcoming schedule</h2>
+    @if (!hasEntries()) {
+      <p>No upcoming maintenance entries.</p>
+    } @else {
+      <ul>
+        @for (entry of entries(); track entry.sourceType + '-' + entry.sourceId + '-' + entry.scheduledDate) {
+          <li>{{ entry.scheduledDate }} - {{ entry.sourceType }} - {{ entry.sourceName }}</li>
+        }
+      </ul>
+    }
+  </section>
+</section>

@@ -1,0 +1,73 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Crops</h1>
+      <p class="page-subtitle">Track crop status, stages, and field activities.</p>
+    </div>
+    <div class="actions">
+      <a routerLink="/crops/new" class="btn btn-primary">Add crop</a>
+    </div>
+  </div>
+
+  <section class="card toolbar">
+    <div class="tool">
+      <div class="field">
+        <span>Search</span>
+        <input type="text" [value]="query()" (input)="query.set($any($event.target).value)" placeholder="Field, crop type, stage..." />
+      </div>
+    </div>
+    <div class="meta">
+      <span class="badge">{{ filtered().length }} records</span>
+    </div>
+  </section>
+
+  @if (loading()) {
+    <section class="grid">
+      @for (_ of [1, 2, 3, 4, 5, 6]; track $index) {
+        <article class="card skeleton">
+          <div class="sk-title"></div>
+          <div class="sk-line"></div>
+          <div class="sk-line short"></div>
+        </article>
+      }
+    </section>
+  } @else if (error()) {
+    <p class="error">{{ error() }}</p>
+  } @else if (!hasData()) {
+    <section class="card empty">
+      <h2>No results</h2>
+      <p class="page-subtitle">Try a different search, or add your first crop record.</p>
+      <a routerLink="/crops/new" class="btn btn-primary">Add crop</a>
+    </section>
+  } @else {
+    <section class="grid">
+      @for (crop of filtered(); track crop.id) {
+        <article class="card crop-card">
+          <div class="top">
+            <div>
+              <h2 class="title">{{ crop.cropType === "custom" ? crop.customCropType : crop.cropType }}</h2>
+              <p class="sub">Field: <strong>{{ crop.fieldName }}</strong></p>
+            </div>
+            <span class="badge" [class.success]="crop.growthStage.toLowerCase().includes('harvest')">
+              {{ crop.growthStage }}
+            </span>
+          </div>
+          <div class="info">
+            <div class="kv">
+              <span class="k">Planted</span>
+              <span class="v">{{ crop.plantingDate }}</span>
+            </div>
+            <div class="kv">
+              <span class="k">Irrigation</span>
+              <span class="v">{{ crop.irrigationSchedule || "—" }}</span>
+            </div>
+          </div>
+          <div class="row">
+            <a class="btn btn-link" [routerLink]="['/crops', crop.id]">Open</a>
+            <button type="button" class="btn btn-danger" (click)="deleteCrop(crop)">Delete</button>
+          </div>
+        </article>
+      }
+    </section>
+  }
+</section>

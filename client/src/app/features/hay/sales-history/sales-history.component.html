@@ -1,0 +1,42 @@
+<section class="page">
+  <h1>Sales history</h1>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  <section class="card">
+    @if (!hasSales()) {
+      <p>No sales yet.</p>
+    } @else {
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Customer</th>
+            <th>Qty</th>
+            <th>Price</th>
+            <th>Status</th>
+            <th>Update</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (s of sales(); track s.id) {
+            <tr>
+              <td>{{ s.saleDate }}</td>
+              <td>{{ s.customer?.fullName || "—" }}</td>
+              <td>{{ s.quantity }}</td>
+              <td>{{ s.price }}</td>
+              <td>
+                <span class="badge" [class.paid]="s.paymentStatus === 'paid'">{{ s.paymentStatus }}</span>
+              </td>
+              <td class="actions">
+                <button type="button" (click)="setPaymentStatus(s, 'pending')">Pending</button>
+                <button type="button" (click)="setPaymentStatus(s, 'paid')">Paid</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+</section>
+

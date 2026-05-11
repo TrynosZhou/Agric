@@ -1,0 +1,74 @@
+<section class="page">
+  <a routerLink="/livestock">Back to livestock</a>
+  @if (loading()) {
+    <p>Loading animal...</p>
+  } @else if (error()) {
+    <p class="error">{{ error() }}</p>
+  } @else if (animal(); as item) {
+    <article class="card">
+      <h1>{{ item.tagIdNumber }} ({{ item.species }})</h1>
+      <p><strong>Date of birth:</strong> {{ item.dateOfBirth }}</p>
+      <p><strong>Mortality status:</strong> {{ item.isDead ? "Dead" : "Alive" }}</p>
+      @if (item.isDead) {
+        <p><strong>Mortality date:</strong> {{ item.mortalityDate }}</p>
+      }
+    </article>
+
+    <article class="card">
+      <h2>Weight history</h2>
+      @if (item.weightHistory.length === 0) {
+        <p>No records.</p>
+      } @else {
+        <ul>
+          @for (entry of item.weightHistory; track $index) {
+            <li>{{ entry.date }} - {{ entry.weightKg }} kg</li>
+          }
+        </ul>
+      }
+      <h2>Vaccinations</h2>
+      @if (item.vaccinationRecords.length === 0) {
+        <p>No records.</p>
+      } @else {
+        <ul>
+          @for (entry of item.vaccinationRecords; track $index) {
+            <li>{{ entry.date }} - {{ entry.vaccineType }} (next due: {{ entry.nextDueDate || "N/A" }})</li>
+          }
+        </ul>
+      }
+      <h2>Dipping records</h2>
+      @if (item.dippingRecords.length === 0) {
+        <p>No records.</p>
+      } @else {
+        <ul>
+          @for (entry of item.dippingRecords; track $index) {
+            <li>{{ entry.date }} - {{ entry.product }}</li>
+          }
+        </ul>
+      }
+      <h2>Treatment history</h2>
+      @if (item.treatmentHistory.length === 0) {
+        <p>No records.</p>
+      } @else {
+        <ul>
+          @for (entry of item.treatmentHistory; track $index) {
+            <li>{{ entry.date }} - {{ entry.treatment }} {{ entry.diagnosis ? "(" + entry.diagnosis + ")" : "" }}</li>
+          }
+        </ul>
+      }
+      @if (item.species === "cattle") {
+        <h2>Daily milk production</h2>
+        @if (item.dailyMilkProduction.length === 0) {
+          <p>No records.</p>
+        } @else {
+          <ul>
+            @for (entry of item.dailyMilkProduction; track $index) {
+              <li>{{ entry.date }} - {{ entry.liters }} liters</li>
+            }
+          </ul>
+        }
+      }
+    </article>
+
+    <app-health-events-form [animalId]="item.id" [species]="item.species" [onSaved]="reload.bind(this)" />
+  }
+</section>

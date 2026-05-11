@@ -1,0 +1,71 @@
+.top-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  background: #0f172a;
+  color: #f8fafc;
+}
+
+.brand {
+  font-weight: 600;
+  color: inherit;
+  text-decoration: none;
+}
+
+.nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.nav a {
+  color: #cbd5e1;
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.nav a:hover {
+  color: #fff;
+}
+
+.user {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+}
+
+.email {
+  color: #e2e8f0;
+}
+
+.role {
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: #334155;
+  text-transform: capitalize;
+}
+
+button {
+  padding: 0.4rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #475569;
+  background: transparent;
+  color: #f8fafc;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+button:hover {
+  background: #1e293b;
+}
+
+.main {
+  padding: 1.5rem;
+  max-width: 960px;
+  margin: 0 auto;
+}

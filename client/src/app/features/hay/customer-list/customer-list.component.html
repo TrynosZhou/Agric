@@ -1,0 +1,27 @@
+<section class="page">
+  <h1>Hay customers</h1>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  <section class="card">
+    <h2>Add customer</h2>
+    <form [formGroup]="form" (ngSubmit)="create()">
+      <label><span>Name</span><input type="text" formControlName="fullName" /></label>
+      <label><span>Phone</span><input type="text" formControlName="phoneNumber" /></label>
+      <label><span>Email</span><input type="text" formControlName="email" /></label>
+      <button type="submit">Create customer</button>
+    </form>
+  </section>
+  <section class="card">
+    <h2>Customer list</h2>
+    @if (!hasCustomers()) {
+      <p>No customers yet.</p>
+    } @else {
+      <ul>
+        @for (c of customers(); track c.id) {
+          <li>{{ c.fullName }} - {{ c.phoneNumber || "—" }} - {{ c.email || "—" }}</li>
+        }
+      </ul>
+    }
+  </section>
+</section>

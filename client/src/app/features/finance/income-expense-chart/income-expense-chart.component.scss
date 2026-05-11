@@ -1,0 +1,59 @@
+.page {
+  display: grid;
+  gap: 1rem;
+}
+.card {
+  border: 1px solid #d8dee8;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  background: #fff;
+}
+form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 0.6rem;
+  align-items: end;
+}
+label {
+  display: grid;
+  gap: 0.2rem;
+}
+.error {
+  color: #b42318;
+}
+.bars {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  height: 240px;
+  align-items: end;
+}
+.bar {
+  border: 1px solid #e6eaf2;
+  border-radius: 0.75rem;
+  height: 240px;
+  position: relative;
+  overflow: hidden;
+  background: #f8fafc;
+}
+.fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.fill.income {
+  background: #12b76a;
+}
+.fill.expense {
+  background: #f04438;
+}
+.label {
+  position: absolute;
+  left: 0.75rem;
+  bottom: 0.75rem;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.85);
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+}

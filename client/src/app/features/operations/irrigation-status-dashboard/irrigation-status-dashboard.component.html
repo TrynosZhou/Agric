@@ -1,0 +1,53 @@
+<section class="page">
+  <h1>Irrigation system status dashboard</h1>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  <section class="card">
+    <h2>Add irrigation system</h2>
+    <form [formGroup]="form" (ngSubmit)="create()">
+      <label>
+        <span>Type</span>
+        <select formControlName="systemType">
+          <option value="center pivot">Center pivot</option>
+          <option value="pump">Pump</option>
+        </select>
+      </label>
+      <label><span>Coverage area / capacity</span><input type="text" formControlName="coverageAreaOrCapacity" /></label>
+      <label>
+        <span>Power source</span>
+        <select formControlName="powerSource">
+          <option value="diesel">Diesel</option>
+          <option value="electric">Electric</option>
+          <option value="solar">Solar</option>
+        </select>
+      </label>
+      <label>
+        <span>Status</span>
+        <select formControlName="status">
+          <option value="active">Active</option>
+          <option value="faulty">Faulty</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </label>
+      <button type="submit">Create system</button>
+    </form>
+  </section>
+  <section class="card">
+    <h2>Systems</h2>
+    @if (!hasSystems()) {
+      <p>No irrigation systems yet.</p>
+    } @else {
+      <ul>
+        @for (system of systems(); track system.id) {
+          <li>
+            {{ system.systemType }} - {{ system.powerSource }} - {{ system.status }}
+            @if (system.coverageAreaOrCapacity) {
+              ({{ system.coverageAreaOrCapacity }})
+            }
+          </li>
+        }
+      </ul>
+    }
+  </section>
+</section>

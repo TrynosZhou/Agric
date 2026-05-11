@@ -1,0 +1,15 @@
+.page {
+  display: grid;
+  gap: 1rem;
+}
+
+.card {
+  border: 1px solid #d8dee8;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  background: #fff;
+}
+
+.error {
+  color: #b42318;
+}

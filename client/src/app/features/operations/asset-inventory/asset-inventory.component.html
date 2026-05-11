@@ -1,0 +1,50 @@
+<section class="page">
+  <h1>Asset inventory</h1>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  <section class="card">
+    <h2>Add asset</h2>
+    <form [formGroup]="form" (ngSubmit)="create()">
+      <label><span>Name</span><input type="text" formControlName="name" /></label>
+      <label>
+        <span>Category</span>
+        <select formControlName="category">
+          <option value="machinery">Machinery</option>
+          <option value="tool">Tool</option>
+          <option value="vehicle">Vehicle</option>
+          <option value="irrigation">Irrigation</option>
+        </select>
+      </label>
+      <label><span>Quantity available</span><input type="number" formControlName="quantityAvailable" /></label>
+      <label><span>Quantity in use</span><input type="number" formControlName="quantityInUse" /></label>
+      <label>
+        <span>Condition</span>
+        <select formControlName="condition">
+          <option value="good">Good</option>
+          <option value="fair">Fair</option>
+          <option value="damaged">Damaged</option>
+        </select>
+      </label>
+      <label><span>Current assigned user</span><input type="text" formControlName="currentAssignedUser" /></label>
+      <button type="submit">Create asset</button>
+    </form>
+  </section>
+  <section class="card">
+    <h2>Inventory</h2>
+    @if (loading()) {
+      <p>Loading assets...</p>
+    } @else if (!hasAssets()) {
+      <p>No assets recorded.</p>
+    } @else {
+      <ul>
+        @for (asset of assets(); track asset.id) {
+          <li>
+            {{ asset.name }} - {{ asset.category }} - {{ asset.quantityInUse }}/{{ asset.quantityAvailable }} in use -
+            {{ asset.condition }}
+          </li>
+        }
+      </ul>
+    }
+  </section>
+</section>

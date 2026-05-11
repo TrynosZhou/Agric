@@ -1,0 +1,72 @@
+<section class="page">
+  <h1>Transaction log</h1>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  <section class="card">
+    <form [formGroup]="form" (ngSubmit)="fetch()">
+      <label><span>From</span><input type="date" formControlName="from" /></label>
+      <label><span>To</span><input type="date" formControlName="to" /></label>
+      <label>
+        <span>Type</span>
+        <select formControlName="type">
+          <option value="">All</option>
+          <option value="income">Income</option>
+          <option value="expense">Expense</option>
+        </select>
+      </label>
+      <label>
+        <span>Category</span>
+        <select formControlName="category">
+          <option value="">All</option>
+          <option value="seeds">Seeds</option>
+          <option value="fertilizer">Fertilizer</option>
+          <option value="labour">Labour</option>
+          <option value="fuel">Fuel</option>
+          <option value="feed">Feed</option>
+          <option value="livestock sale">Livestock sale</option>
+          <option value="crop sale">Crop sale</option>
+          <option value="hay bale sale">Hay bale sale</option>
+          <option value="maintenance">Maintenance</option>
+        </select>
+      </label>
+      <button type="submit">Filter</button>
+    </form>
+  </section>
+
+  <section class="card">
+    @if (loading()) {
+      <p>Loading...</p>
+    } @else if (!hasRows()) {
+      <p>No transactions found.</p>
+    } @else {
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Category</th>
+            <th>Amount</th>
+            <th>Crop</th>
+            <th>Livestock group</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (row of rows(); track row.id) {
+            <tr>
+              <td>{{ row.date }}</td>
+              <td>{{ row.entryType }}</td>
+              <td>{{ row.category }}</td>
+              <td>{{ row.amount }}</td>
+              <td>{{ row.crop?.fieldName || "—" }}</td>
+              <td>{{ row.livestockGroup || "—" }}</td>
+              <td>{{ row.notes || "—" }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+</section>
+

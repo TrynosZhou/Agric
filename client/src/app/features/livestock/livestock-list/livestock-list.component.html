@@ -1,0 +1,147 @@
+<section class="page">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Livestock</h1>
+      <p class="page-subtitle">Animals, poultry batches, and health tracking.</p>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="btn" (click)="load()">Refresh</button>
+    </div>
+  </div>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <section class="card toolbar">
+    <div class="row">
+      <div class="field">
+        <span>Search (tag/species)</span>
+        <input type="text" [value]="query()" (input)="query.set($any($event.target).value)" placeholder="e.g. 00012, cattle..." />
+      </div>
+      <div class="field">
+        <span>Type</span>
+        <select [value]="typeFilter()" (change)="updateTypeFilter($any($event.target).value)">
+          <option value="all">All</option>
+          <option value="individual">Individual animals</option>
+          <option value="poultry">Poultry batches</option>
+        </select>
+      </div>
+      <div class="field">
+        <span>Species (individual)</span>
+        <select [value]="speciesFilter()" (change)="updateSpeciesFilter($any($event.target).value)">
+          <option value="">All species</option>
+          <option value="cattle">Cattle</option>
+          <option value="goats">Goats</option>
+          <option value="pigs">Pigs</option>
+        </select>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="badge">{{ filteredAnimals().length }} animals</span>
+      <span class="badge">{{ poultrySummary().batches }} poultry batches</span>
+    </div>
+  </section>
+
+  <section class="grid">
+    <section class="card" class="card">
+      <h2 class="section-title">Add individual animal</h2>
+      <form [formGroup]="animalForm" (ngSubmit)="createAnimal()" class="form-grid">
+        <div class="field">
+          <span>Species</span>
+          <select formControlName="species">
+            <option value="cattle">Cattle</option>
+            <option value="goats">Goats</option>
+            <option value="pigs">Pigs</option>
+          </select>
+        </div>
+        <div class="field"><span>Tag/ID number</span><input type="text" formControlName="tagIdNumber" placeholder="e.g. C-0012" /></div>
+        <div class="field"><span>Date of birth</span><input type="date" formControlName="dateOfBirth" /></div>
+        <button type="submit" class="btn btn-primary">Create animal</button>
+      </form>
+    </section>
+
+    <section class="card" class="card">
+      <h2 class="section-title">Add poultry batch</h2>
+      <form [formGroup]="poultryForm" (ngSubmit)="createPoultry()" class="form-grid">
+        <div class="field"><span>Batch code</span><input type="text" formControlName="batchCode" placeholder="e.g. P-APR-01" /></div>
+        <div class="field"><span>Flock size</span><input type="number" formControlName="flockSize" /></div>
+        <div class="field"><span>Mortality count</span><input type="number" formControlName="mortalityCount" /></div>
+        <div class="field"><span>Feed consumed (kg)</span><input type="text" formControlName="feedConsumptionKg" /></div>
+        <div class="field"><span>Egg production</span><input type="number" formControlName="eggProduction" /></div>
+        <button type="submit" class="btn btn-primary">Create poultry batch</button>
+      </form>
+    </section>
+  </section>
+
+  @if (loading()) {
+    <section class="card skeleton">
+      <div class="sk-title"></div>
+      <div class="sk-line"></div>
+      <div class="sk-line short"></div>
+    </section>
+  } @else {
+    <section class="card">
+      <div class="table-head">
+        <h2>Individual animals</h2>
+        <span class="badge">{{ filteredAnimals().length }}</span>
+      </div>
+      @if (filteredAnimals().length === 0) {
+        <p class="page-subtitle">No animals found for selected filters.</p>
+      } @else {
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Tag</th>
+              <th>Species</th>
+              <th>DOB</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (animal of filteredAnimals(); track animal.id) {
+              <tr>
+                <td><strong>{{ animal.tagIdNumber }}</strong></td>
+                <td><span class="badge">{{ animal.species }}</span></td>
+                <td>{{ animal.dateOfBirth }}</td>
+                <td><a class="btn-link" [routerLink]="['/livestock/animals', animal.id]">Open</a></td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </section>
+
+    <section class="card">
+      <div class="table-head">
+        <h2>Poultry batches</h2>
+        <span class="badge">{{ poultry().length }}</span>
+      </div>
+      @if (!hasPoultry()) {
+        <p class="page-subtitle">No poultry batches found for selected filters.</p>
+      } @else {
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Batch</th>
+              <th>Flock</th>
+              <th>Mortality</th>
+              <th>Feed (kg)</th>
+              <th>Eggs</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (batch of poultry(); track batch.id) {
+              <tr>
+                <td><strong>{{ batch.batchCode }}</strong></td>
+                <td>{{ batch.flockSize }}</td>
+                <td><span class="badge warning">{{ batch.mortalityCount }}</span></td>
+                <td>{{ batch.feedConsumptionKg }}</td>
+                <td>{{ batch.eggProduction }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </section>
+  }
+</section>

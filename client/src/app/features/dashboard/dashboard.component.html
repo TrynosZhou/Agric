@@ -1,0 +1,218 @@
+<div class="container-fluid py-3">
+  <div class="hero card shadow-sm border-0 mb-3">
+    <div class="card-body p-4">
+      <div class="d-flex flex-wrap align-items-start justify-content-between gap-3">
+        <div>
+          <h1 class="h3 mb-1 fw-bold text-white">Farm Dashboard</h1>
+          <div class="text-white-50">
+            Signed in as <strong class="text-white">{{ auth.user()?.email }}</strong>
+            <span class="ms-1 text-white-50">({{ auth.user()?.role }})</span>
+          </div>
+          @if (!loading() && summary(); as s) {
+            <div class="mt-2 d-flex flex-wrap gap-2">
+              <span class="badge text-bg-light">Month: {{ s.finance.month }}</span>
+              <span class="badge" [class.text-bg-success]="s.finance.netProfit >= 0" [class.text-bg-danger]="s.finance.netProfit < 0">
+                Net {{ s.finance.netProfit }}
+              </span>
+              @if (s.irrigation.faulty > 0) {
+                <span class="badge text-bg-warning">Faulty irrigation: {{ s.irrigation.faulty }}</span>
+              }
+            </div>
+          }
+        </div>
+        <div class="d-flex align-items-center gap-2">
+          <button type="button" class="btn btn-light" (click)="reload()">Refresh</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  @if (error()) {
+    <div class="alert alert-danger">{{ error() }}</div>
+  }
+
+  <div class="quick-actions card shadow-sm mb-3">
+    <div class="card-body py-3">
+      <div class="d-flex flex-wrap gap-2">
+        <a routerLink="/crops/new" class="btn btn-sm btn-outline-primary">+ New crop</a>
+        <a routerLink="/labour/attendance" class="btn btn-sm btn-outline-primary">+ Capture attendance</a>
+        <a routerLink="/hay/new-sale" class="btn btn-sm btn-outline-primary">+ Record hay sale</a>
+        <a routerLink="/operations/assets/usage" class="btn btn-sm btn-outline-primary">+ Log asset usage</a>
+        <a routerLink="/finance/transactions" class="btn btn-sm btn-outline-primary">View transactions</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    @if (loading()) {
+      @for (_ of [1, 2, 3, 4, 5, 6, 7]; track $index) {
+        <div class="col-12 col-md-6 col-xl-4">
+          <div class="card shadow-sm h-100">
+            <div class="card-body">
+              <div class="placeholder-glow">
+                <span class="placeholder col-6"></span>
+                <span class="placeholder col-3"></span>
+                <span class="placeholder col-10"></span>
+                <span class="placeholder col-8"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    } @else if (summary(); as s) {
+      <div class="col-12 col-md-6 col-xl-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div class="text-secondary small">Crops</div>
+                <div class="fs-2 fw-bold">{{ s.crops.active.length }}</div>
+              </div>
+              <span class="badge text-bg-primary">Active</span>
+            </div>
+            <div class="mt-2 small text-secondary">
+              @for (c of s.crops.active.slice(0, 3); track c.id) {
+                <div class="text-truncate">{{ c.fieldName }} — {{ c.cropType }} ({{ c.growthStage }})</div>
+              }
+            </div>
+            <a routerLink="/crops" class="btn btn-sm btn-link px-0 mt-2">View crops</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div class="text-secondary small">Livestock</div>
+                <div class="fs-6 fw-bold mt-2">By type</div>
+              </div>
+              <span class="badge text-bg-secondary">Counts</span>
+            </div>
+            <div class="mt-2 d-grid gap-1">
+              <div class="d-flex justify-content-between"><span>Cattle</span><strong>{{ s.livestock.counts["cattle"] || 0 }}</strong></div>
+              <div class="d-flex justify-content-between"><span>Goats</span><strong>{{ s.livestock.counts["goats"] || 0 }}</strong></div>
+              <div class="d-flex justify-content-between"><span>Pigs</span><strong>{{ s.livestock.counts["pigs"] || 0 }}</strong></div>
+              <div class="d-flex justify-content-between"><span>Poultry</span><strong>{{ s.livestock.counts["poultry"] || 0 }}</strong></div>
+            </div>
+            <a routerLink="/livestock" class="btn btn-sm btn-link px-0 mt-2">View livestock</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <div class="text-secondary small">Labour</div>
+            <div class="d-flex justify-content-between align-items-end mt-1">
+              <div>
+                <div class="fs-2 fw-bold">{{ s.labour.attendanceTodayCount }}</div>
+                <div class="text-secondary small">Attendance today</div>
+              </div>
+              <a routerLink="/labour/attendance" class="btn btn-sm btn-outline-primary">Capture</a>
+            </div>
+            <hr />
+            <div class="d-flex justify-content-between">
+              <div class="text-secondary small">Wage cost ({{ s.labour.month }})</div>
+              <strong>{{ s.labour.totalWageCostThisMonth }}</strong>
+            </div>
+            <a routerLink="/labour/payroll" class="btn btn-sm btn-link px-0 mt-2">View payroll</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <div class="text-secondary small">Assets</div>
+            <div class="mt-2 d-grid gap-1">
+              <div class="d-flex justify-content-between"><span>Total</span><strong>{{ s.assets.total }}</strong></div>
+              <div class="d-flex justify-content-between"><span>In use</span><strong>{{ s.assets.inUse }}</strong></div>
+              <div class="d-flex justify-content-between">
+                <span>Damaged</span>
+                <span class="badge" [class.text-bg-danger]="s.assets.damaged > 0" [class.text-bg-success]="s.assets.damaged === 0">
+                  {{ s.assets.damaged }}
+                </span>
+              </div>
+            </div>
+            <a routerLink="/operations/assets" class="btn btn-sm btn-link px-0 mt-2">View assets</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <div class="text-secondary small">Irrigation</div>
+            <div class="mt-2 d-grid gap-1">
+              <div class="d-flex justify-content-between"><span>Active</span><strong>{{ s.irrigation.active }}</strong></div>
+              <div class="d-flex justify-content-between">
+                <span>Faulty</span>
+                <span class="badge" [class.text-bg-warning]="s.irrigation.faulty > 0" [class.text-bg-success]="s.irrigation.faulty === 0">
+                  {{ s.irrigation.faulty }}
+                </span>
+              </div>
+            </div>
+            <a routerLink="/operations/irrigation" class="btn btn-sm btn-link px-0 mt-2">View irrigation</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-12 col-md-6 col-xl-4">
+        <div class="card shadow-sm h-100">
+          <div class="card-body">
+            <div class="text-secondary small">Finance ({{ s.finance.month }})</div>
+            <div class="mt-2 d-grid gap-1">
+              <div class="d-flex justify-content-between"><span>Income</span><strong>{{ s.finance.income }}</strong></div>
+              <div class="d-flex justify-content-between"><span>Expenses</span><strong>{{ s.finance.expenses }}</strong></div>
+              <div class="d-flex justify-content-between">
+                <span>Net</span>
+                <span class="badge" [class.text-bg-success]="s.finance.netProfit >= 0" [class.text-bg-danger]="s.finance.netProfit < 0">
+                  {{ s.finance.netProfit }}
+                </span>
+              </div>
+            </div>
+            <a routerLink="/finance/summary" class="btn btn-sm btn-link px-0 mt-2">View finance</a>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="card shadow-sm mt-3">
+    <div class="card-header bg-white d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <div class="fw-bold">Recent alerts</div>
+      <a routerLink="/finance/transactions" class="btn btn-sm btn-outline-secondary">View transactions</a>
+    </div>
+    <div class="card-body">
+      @if (loading()) {
+        <div class="placeholder-glow">
+          <span class="placeholder col-12"></span>
+          <span class="placeholder col-10"></span>
+          <span class="placeholder col-11"></span>
+          <span class="placeholder col-9"></span>
+        </div>
+      } @else if (summary(); as s) {
+        @if (s.recentAlerts.length === 0) {
+          <div class="text-secondary">No recent critical or warning alerts.</div>
+        } @else {
+          <div class="list-group list-group-flush">
+            @for (n of s.recentAlerts; track n.id) {
+              <div class="list-group-item alert-item">
+                <div class="d-flex justify-content-between align-items-start gap-2">
+                  <div class="fw-semibold">{{ n.title }}</div>
+                  <span class="badge" [class.text-bg-danger]="n.priority === 'critical'" [class.text-bg-warning]="n.priority === 'warning'">
+                    {{ n.priority }}
+                  </span>
+                </div>
+                <div class="small text-secondary">{{ n.module }} · {{ ageLabel(n.createdAt) }}</div>
+                <div class="small">{{ n.message }}</div>
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>

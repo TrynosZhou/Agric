@@ -1,0 +1,41 @@
+<div class="bell">
+  <button type="button" class="bell-btn" (click)="toggle()">
+    Alerts
+    @if (unreadCount() > 0) {
+      <span class="badge">{{ unreadCount() }}</span>
+    }
+  </button>
+
+  @if (open()) {
+    <div class="panel">
+      <div class="panel-header">
+        <strong>Notifications</strong>
+        <button type="button" (click)="markAllRead()">Mark all read</button>
+      </div>
+
+      @if (error()) {
+        <p class="error">{{ error() }}</p>
+      }
+
+      @if (notifications().length === 0) {
+        <p class="empty">No alerts.</p>
+      } @else {
+        <ul class="list">
+          @for (n of notifications(); track n.id) {
+            <li class="item" [class.unread]="n.status === 'unread'" [class.critical]="n.priority === 'critical'">
+              <button type="button" class="item-btn" (click)="markRead(n)">
+                <div class="title">
+                  <span class="priority">{{ n.priority }}</span>
+                  {{ n.title }}
+                </div>
+                <div class="meta">{{ n.module }} · {{ n.createdAt }}</div>
+                <div class="message">{{ n.message }}</div>
+              </button>
+            </li>
+          }
+        </ul>
+      }
+    </div>
+  }
+</div>
+

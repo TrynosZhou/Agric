@@ -1,0 +1,36 @@
+<section class="page">
+  <h1>Record new hay sale</h1>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  @if (stock(); as s) {
+    @if (s.lowStock) {
+      <div class="alert">Low stock alert: {{ s.balesInStock }} bales left (threshold {{ s.lowStockThreshold }})</div>
+    }
+  }
+  <section class="card">
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <label>
+        <span>Customer</span>
+        <select formControlName="customerId">
+          <option value="" disabled>Select customer</option>
+          @for (c of customers(); track c.id) {
+            <option [value]="c.id">{{ c.fullName }}</option>
+          }
+        </select>
+      </label>
+      <label><span>Quantity</span><input type="number" formControlName="quantity" /></label>
+      <label><span>Price per bale</span><input type="text" formControlName="price" /></label>
+      <label><span>Sale date</span><input type="date" formControlName="saleDate" /></label>
+      <label>
+        <span>Payment status</span>
+        <select formControlName="paymentStatus">
+          <option value="pending">Pending</option>
+          <option value="paid">Paid</option>
+        </select>
+      </label>
+      <button type="submit" [disabled]="!hasCustomers()">Record sale</button>
+    </form>
+  </section>
+</section>
+

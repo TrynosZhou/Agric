@@ -1,0 +1,34 @@
+<section class="page">
+  <h1>Farm profit summary</h1>
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+  <section class="card">
+    <form [formGroup]="form" (ngSubmit)="fetch()">
+      <label><span>From</span><input type="date" formControlName="from" /></label>
+      <label><span>To</span><input type="date" formControlName="to" /></label>
+      <button type="submit">Update</button>
+    </form>
+  </section>
+  @if (summary(); as s) {
+    <section class="card">
+      <div class="grid">
+        <div class="metric">
+          <div class="label">Total income</div>
+          <div class="value income">{{ s.totalIncome }}</div>
+        </div>
+        <div class="metric">
+          <div class="label">Total expense</div>
+          <div class="value expense">{{ s.totalExpense }}</div>
+        </div>
+        <div class="metric">
+          <div class="label">Net profit/loss</div>
+          <div class="value" [class.income]="s.netProfitLoss >= 0" [class.expense]="s.netProfitLoss < 0">
+            {{ s.netProfitLoss }}
+          </div>
+        </div>
+      </div>
+    </section>
+  }
+</section>
+
